@@ -1,0 +1,17 @@
+{
+  "name": "react-native-customizable-countdown",
+  "version": "1.0.0",
+  "description": "This module gives you the full access to change the UI as you want. Thank you for using!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Haritha Senevirathne",
+  "license": "ISC",
+  "devDependencies": {
+    "metro-react-native-babel-preset": "^0.58.0"
+  },
+  "dependencies": {
+    "prop-types": "^15.7.2"
+  }
+}
