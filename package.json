@@ -1,17 +1,43 @@
 {
   "name": "react-native-customizable-countdown",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "This module gives you the full access to change the UI as you want. Thank you for using!",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Harisene/react-native-customizable-countdown"
+  },
+
+  "keywords": [
+    "react-native",
+    "react-component",
+    "react-native-component",
+    "react",
+    "react native",
+    "mobile",
+    "ios",
+    "android",
+    "ui",
+    "customize",
+    "customizable",
+    "customizable-component"    
+  ],
+
   "author": "Haritha Senevirathne",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Harisene/react-native-customizable-countdown/issues"
+  },
   "devDependencies": {
     "metro-react-native-babel-preset": "^0.58.0"
   },
   "dependencies": {
     "prop-types": "^15.7.2"
-  }
+  },
+  "homepage": "https://github.com/Harisene/react-native-customizable-countdown"
+
+  
 }
