@@ -1,4 +1,11 @@
-react-native-customizable-countdown
+## Preview
+![1](https://user-images.githubusercontent.com/33250282/76606296-02eecd80-6538-11ea-9a7c-2db54be6810d.PNG)
+
+![2](https://user-images.githubusercontent.com/33250282/76607007-4138bc80-6539-11ea-8f2a-b8ca393bb9fa.PNG)
+
+
+
+
 ## Installation
 
 from npm:\
@@ -39,6 +46,60 @@ or from yarn:\
 | minutesText | text which should display in minutes container | no | string | 'Minutes' |
 | secondsText | text which should display in seconds container | no | string | 'Seconds' |
 | showHours | show or hide hours container if necessory | no | bool | true |
-| reset | show or hide hours container if necessory | no | bool | true |
 
+## Usage
 
+``` 
+import {CountDown} from 'react-native-customizable-countdown'
+
+<CountDown
+    ref = {(ref) => this.myRef=ref}
+    initialSeconds = {4500}
+    onTimeOut = {()=>{}}
+    digitFontSize={30}
+    textFontSize = {15}
+    width={300}
+    height={100}
+    hoursText={'hrs'}
+    minutesText={'min'}
+    enableText = {true}
+    backgroundColor={'yellow'}
+    hoursBackgroundStyle={{borderWidth:2, backgroundColor:null, borderColor: 'blue'}}
+    secondsBackgroundStyle={{borderWidth:0, backgroundColor:null, borderColor: 'blue'}}
+    secondsDigitFontStyle={{color:'pink'}}
+    secondsTextFontStyle={{color:'green'}}
+    textColor='red'
+    textFontWeight='bold'
+    textPosition = 'top'/> 
+```
+
+## onChange
+
+```
+onChange = (hours, minutes, seconds) => {
+  console.log('hours: '+hours+' minutes: '+minutes+' seconds: '+seconds);
+}
+
+  render() {   
+    return ( 
+    <CountDown
+        ref = {(ref) => this.myRef=ref}
+        initialSeconds = {4500}
+        onTimeOut = {()=>{alert('time out!')}}
+        onChange = {this.onChange}
+        digitFontSize={30}
+        textFontSize = {15}
+        width={300}
+        height={100}/>
+```
+## Methods
+using **ref** property you can access below mentioned all methods.
+
+###### resetCountDown 
+``` this.myRef.resetCountDown() ```
+
+###### addSeconds 
+``` this.myRef.resetCountDown(number) ```
+
+###### deductSeconds 
+``` this.myRef.deductSeconds(number) ```
