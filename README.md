@@ -47,6 +47,8 @@ or from yarn:\
 | secondsText | text which should display in seconds container | no | string | 'Seconds' |
 | showHours | show or hide hours container if necessory (**can hide only if hours digit is zero**) | no | bool | true |
 | showMinutes | show or hide minutes container if necessory (**can hide only if minutes digit is zero**) | no | bool | true |
+| showSeperator | show or hide seperator between containers | no | bool | false |
+| animateSeperator | **only works when showSeperator is shown** | no | bool | false |
 ## Usage
 
 ``` 

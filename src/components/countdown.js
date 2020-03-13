@@ -1,12 +1,14 @@
 //import liraries
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Animated, Easing} from 'react-native';
 import propTypes from 'prop-types';
 // create a component
 class CountDown extends Component {
 
     constructor(props){
         super(props);      
+
+        this.animatedValue = new Animated.Value(0);
 
           const {
             initialSeconds,
@@ -129,7 +131,11 @@ class CountDown extends Component {
 
 
     resetCountDown = () => {
-      clearInterval(this.timer);      
+      clearInterval(this.timer); 
+      
+      if(this.props.animateSeperator && this.props.animateSeperator)
+        this.startAnimate();
+
       const {initialSeconds} = this.state;
       let minutes = Math.floor(initialSeconds/60);
       const seconds = initialSeconds%60;
@@ -142,49 +148,26 @@ class CountDown extends Component {
 
     addSeconds = (userSeconds) => {      
       let {seconds, minutes, hours} = this.state;
-
-      seconds +=userSeconds;
-
-      if(seconds>59){
-        minutes += Math.floor(seconds/60);
-        seconds = seconds%60;
-      }
       
-
-      if(minutes>59){
-        hours += Math.floor(minutes/60);
-        minutes = minutes%60;
-      }
-
-      this.setState({seconds, minutes, hours })
+      const initialSeconds = userSeconds + seconds + minutes * 60 + hours * 3600;
+      this.setState({
+        seconds: this.calculateSeconds(initialSeconds),
+        minutes: this.calculateMinutes(initialSeconds),
+        hours: this.calculateHours(initialSeconds)
+       })
       
     }
 
     deductSeconds = (userSeconds) => {      
 
       let {seconds, minutes, hours} = this.state;
-
-      seconds -=userSeconds;
-
-      if(hours === 0 && minutes===0 && seconds <= 0)
-        seconds = 0;
-      
-      else if(seconds<0){
-        minutes -= (Math.floor(Math.abs(seconds)/60)+1);
-        seconds = 60 + seconds%60;
-      }
-      
-
-      else if(minutes<0 && seconds>=0){
-        hours -= (Math.floor(Math.abs(minutes)/60)+1);        
-        minutes = 60 + minutes%60;
-        console.log('gottcha!')
-      }
-
-          
-
-
-      this.setState({seconds, minutes: Math.max(minutes, 0), hours: Math.max(hours, 0) })
+      const initialSeconds = (seconds + minutes * 60 + hours * 3600) - userSeconds;
+      this.setState({
+        seconds: this.calculateSeconds(initialSeconds),
+        minutes: this.calculateMinutes(initialSeconds),
+        hours: this.calculateHours(initialSeconds)
+       })
+               
     }
 
 
@@ -211,8 +194,7 @@ class CountDown extends Component {
             
             else{
                 seconds--;
-            }
-            //console.log(hours, minutes, seconds)
+            }           
             this.setState({ seconds, minutes, hours})
             
         }, 1000)
@@ -225,9 +207,27 @@ class CountDown extends Component {
         }
       }
 
+      startAnimate () {
+        this.animatedValue.setValue(0);
+        Animated.timing(
+          this.animatedValue,
+          {
+            toValue: 1,
+            duration: 1000,
+            easing: Easing.linear
+          }
+        ).start(() => {
+          const {seconds, minutes, hours} = this.state;
+          if(seconds || minutes || hours)
+            this.startAnimate();
+          
+        })
+      }
 
     componentDidMount(){
-      this.setTimer();  
+      this.setTimer(); 
+      if(this.props.animateSeperator && this.props.animateSeperator)
+        this.startAnimate();
     }
 
    
@@ -252,7 +252,13 @@ class CountDown extends Component {
       flexDirection
       
     } = this;
-    const {enableText, width, height, hoursText, minutesText, secondsText, showHours, showMinutes} = this.props;
+    const {enableText, width, height, hoursText, minutesText, secondsText, showHours, showMinutes, showSeperator, animateSeperator} = this.props;
+
+    const opacity = this.animatedValue.interpolate({
+      inputRange: [0, 0.5, 1],
+      outputRange: [0, 1, 1]
+    })
+
     return (
       <View style={[styles.container, {width, height}]}>
         {(hours>0 || showHours) && <View style={[styles.hoursBackground, propStyleForHoursBackground, {flexDirection}]}>
@@ -262,12 +268,16 @@ class CountDown extends Component {
           {enableText && <Text style={propStyleForHoursText}>{hoursText}</Text>}
         </View>}
 
+       {showSeperator && <Animated.Text style={{textAlignVertical:'center', fontSize:30, opacity: animateSeperator? opacity : 1}}> : </Animated.Text>}
+
        {(minutes>0 || showMinutes) && <View style={[styles.minutesBackground, propStyleForMinutesBackground, {flexDirection}]}>
           <Text style={propStyleForMinutesDigit}>
             {minutes < 10 ? '0' + minutes : minutes}
           </Text>
     {enableText &&  <Text style={propStyleForMinutesText}>{minutesText}</Text>}
         </View>} 
+
+        {showSeperator && <Animated.Text style={{textAlignVertical:'center', fontSize:30, opacity: animateSeperator? opacity : 1}}> : </Animated.Text>}
 
         <View style={[styles.secondsBackground, propStyleForSecondsBackground, {flexDirection}]}>
           <Text style={propStyleForSecondsDigit}>
@@ -283,7 +293,7 @@ class CountDown extends Component {
 // define your styles
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row'    
+    flexDirection: 'row'     
   },
 
   hoursBackground: {
@@ -335,7 +345,9 @@ CountDown.propTypes = {
   secondsText: propTypes.string,
   showHours: propTypes.bool,
   showMinutes: propTypes.bool,
-  onChange: propTypes.func
+  onChange: propTypes.func,
+  showSeperator: propTypes.bool,
+  animateSeperator: propTypes.bool
   
 };
 
@@ -355,7 +367,9 @@ CountDown.defaultProps = {
   minutesText: 'Minutes',
   secondsText: 'Seconds',
   showHours: true,
-  showMinutes: true
+  showMinutes: true,
+  showSeperator: false,
+  animateSeperator: false
 };
 //make this component available to the app
 export default CountDown;
