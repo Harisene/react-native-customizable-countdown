@@ -252,7 +252,7 @@ class CountDown extends Component {
       flexDirection
       
     } = this;
-    const {enableText, width, height, hoursText, minutesText, secondsText, showHours} = this.props;
+    const {enableText, width, height, hoursText, minutesText, secondsText, showHours, showMinutes} = this.props;
     return (
       <View style={[styles.container, {width, height}]}>
         {(hours>0 || showHours) && <View style={[styles.hoursBackground, propStyleForHoursBackground, {flexDirection}]}>
@@ -262,12 +262,12 @@ class CountDown extends Component {
           {enableText && <Text style={propStyleForHoursText}>{hoursText}</Text>}
         </View>}
 
-        <View style={[styles.minutesBackground, propStyleForMinutesBackground, {flexDirection}]}>
+       {(minutes>0 || showMinutes) && <View style={[styles.minutesBackground, propStyleForMinutesBackground, {flexDirection}]}>
           <Text style={propStyleForMinutesDigit}>
             {minutes < 10 ? '0' + minutes : minutes}
           </Text>
     {enableText &&  <Text style={propStyleForMinutesText}>{minutesText}</Text>}
-        </View>
+        </View>} 
 
         <View style={[styles.secondsBackground, propStyleForSecondsBackground, {flexDirection}]}>
           <Text style={propStyleForSecondsDigit}>
@@ -334,6 +334,7 @@ CountDown.propTypes = {
   minutesText: propTypes.string,
   secondsText: propTypes.string,
   showHours: propTypes.bool,
+  showMinutes: propTypes.bool,
   onChange: propTypes.func
   
 };
@@ -353,7 +354,8 @@ CountDown.defaultProps = {
   hoursText: 'Hours',
   minutesText: 'Minutes',
   secondsText: 'Seconds',
-  showHours: true
+  showHours: true,
+  showMinutes: true
 };
 //make this component available to the app
 export default CountDown;

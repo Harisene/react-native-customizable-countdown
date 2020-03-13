@@ -45,8 +45,8 @@ or from yarn:\
 | hoursText | text which should display in hours container | no | string | 'Hours' |
 | minutesText | text which should display in minutes container | no | string | 'Minutes' |
 | secondsText | text which should display in seconds container | no | string | 'Seconds' |
-| showHours | show or hide hours container if necessory | no | bool | true |
-
+| showHours | show or hide hours container if necessory (**can hide only if hours digit is zero**) | no | bool | true |
+| showMinutes | show or hide minutes container if necessory (**can hide only if minutes digit is zero**) | no | bool | true |
 ## Usage
 
 ``` 
