@@ -202,7 +202,8 @@ class CountDown extends Component {
             }            
 
             else if(seconds === 0 && minutes === 0 && hours === 0){
-                this.props.onTimeOut();
+                if(this.props.onTimeOut)
+                   this.props.onTimeOut();
                 clearInterval(this.timer);
             }              
             
@@ -222,8 +223,9 @@ class CountDown extends Component {
       }
 
       componentDidUpdate(prevProps, prevState) {        
-        if (this.state.seconds !== prevState.seconds) {         
-          this.props.onChange(this.state.hours, this.state.minutes, this.state.seconds)
+        if (this.state.seconds !== prevState.seconds) { 
+          if(this.props.onChange)        
+            this.props.onChange(this.state.hours, this.state.minutes, this.state.seconds)
         }
       }
 
@@ -308,7 +310,7 @@ const styles = StyleSheet.create({
 });
 
 CountDown.propTypes = {
-  initialSeconds: propTypes.number.isRequired,
+  initialSeconds: propTypes.number,
   onTimeOut: propTypes.func.isRequired,
   backgroundColor: propTypes.string,
   hoursBackgroundStyle: propTypes.object,
@@ -331,15 +333,17 @@ CountDown.propTypes = {
   minutesTextFontStyle: propTypes.object,
   secondsTextFontStyle: propTypes.object,
   textPosition: propTypes.oneOf(['top', 'bottom']),
+  enableText: propTypes.bool,
   hoursText: propTypes.string,
   minutesText: propTypes.string,
   secondsText: propTypes.string,
   showHours: propTypes.bool,
-  reset: propTypes.bool,
   onChange: propTypes.func
+  
 };
 
 CountDown.defaultProps = {
+  initialSeconds: 120,
   backgroundColor: 'white',
   digitColor: 'black',
   gap: 5,
