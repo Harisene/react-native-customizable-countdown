@@ -129,19 +129,18 @@ class CountDown extends Component {
 
 
     resetCountDown = () => {
-      console.log('reseting...');
+      clearInterval(this.timer);      
       const {initialSeconds} = this.state;
       let minutes = Math.floor(initialSeconds/60);
       const seconds = initialSeconds%60;
       const hours = Math.floor(minutes/60);
       minutes = minutes%60;
 
-      this.setState({seconds, minutes, hours})
+      this.setState({seconds, minutes, hours}, () => this.setTimer())
         
     }
 
-    addSeconds = (userSeconds) => {
-      console.log('Adding '+userSeconds+' to the countdown!')
+    addSeconds = (userSeconds) => {      
       let {seconds, minutes, hours} = this.state;
 
       seconds +=userSeconds;
@@ -161,8 +160,7 @@ class CountDown extends Component {
       
     }
 
-    deductSeconds = (userSeconds) => {
-      console.log('Deducting '+userSeconds+' from the countdown!')
+    deductSeconds = (userSeconds) => {      
 
       let {seconds, minutes, hours} = this.state;
 
@@ -171,24 +169,22 @@ class CountDown extends Component {
       if(hours === 0 && minutes===0 && seconds <= 0)
         seconds = 0;
       
-      else{
-
-      if(seconds<0){
+      else if(seconds<0){
         minutes -= (Math.floor(Math.abs(seconds)/60)+1);
         seconds = 60 + seconds%60;
       }
       
 
-      if(minutes<0){
-        hours -= (Math.floor(Math.abs(minutes)/60)+1);
+      else if(minutes<0 && seconds>=0){
+        hours -= (Math.floor(Math.abs(minutes)/60)+1);        
         minutes = 60 + minutes%60;
+        console.log('gottcha!')
       }
 
-    }
-      
+          
 
 
-      this.setState({seconds, minutes, hours })
+      this.setState({seconds, minutes: Math.max(minutes, 0), hours: Math.max(hours, 0) })
     }
 
 
