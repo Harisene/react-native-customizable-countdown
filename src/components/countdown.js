@@ -1,6 +1,6 @@
 //import liraries
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Animated, Easing} from 'react-native';
+import {View, Text, StyleSheet, Animated, Easing, AppState} from 'react-native';
 import propTypes from 'prop-types';
 // create a component
 class CountDown extends Component {
@@ -30,7 +30,7 @@ class CountDown extends Component {
             hoursTextFontStyle,
             minutesTextFontStyle,
             secondsTextFontStyle,            
-            textPosition                        
+            textPosition                                    
                              
           } = this.props;    
           
@@ -94,7 +94,7 @@ class CountDown extends Component {
             fontWeight: textFontWeight,
             fontSize: textFontSize,
             ...secondsTextFontStyle
-        }
+        }      
 
         if(textPosition === 'top')
             this.flexDirection = 'column-reverse'
@@ -107,11 +107,11 @@ class CountDown extends Component {
                 initialSeconds,
                 seconds: this.calculateSeconds(initialSeconds),
                 minutes: this.calculateMinutes(initialSeconds),
-                hours: this.calculateHours(initialSeconds)
+                hours: this.calculateHours(initialSeconds)                
               };
 
             
-           
+            this.appState= AppState.currentState;
             this.reset = false;
     }
     
@@ -133,7 +133,7 @@ class CountDown extends Component {
     resetCountDown = () => {
       clearInterval(this.timer); 
       
-      if(this.props.animateSeperator && this.props.animateSeperator)
+      if(this.props.animateSeparator && this.props.showSeparator)
         this.startAnimate();
 
       const {initialSeconds} = this.state;
@@ -205,6 +205,18 @@ class CountDown extends Component {
           if(this.props.onChange)        
             this.props.onChange(this.state.hours, this.state.minutes, this.state.seconds)
         }
+
+        if(this.props.pause !== prevProps.pause){
+          if(this.props.pause === true){
+            clearInterval(this.timer);
+
+          }
+
+          else if(this.props.pause === false)
+            this.setTimer();
+            this.startAnimate();
+        }
+
       }
 
       startAnimate () {
@@ -218,22 +230,56 @@ class CountDown extends Component {
           }
         ).start(() => {
           const {seconds, minutes, hours} = this.state;
-          if(seconds || minutes || hours)
+          if((seconds || minutes || hours) && !this.props.pause)
             this.startAnimate();
+          
           
         })
       }
 
+    _handleAppStateChange = (nextAppState) => {
+      if (this.appState.match(/inactive|background/) && nextAppState === 'active') {   
+        console.log('App has come to the foreground!');     
+        
+        if(!this.props.pause && this.props.activeInBackground) {
+        
+        const difference = Date.now() - this.wentBackAt;
+        
+        const {seconds, minutes, hours} = this.state;
+
+        const initialSeconds = Math.max(seconds + (minutes * 60) + (hours * 60) - Math.round(difference/1000), 0);
+        
+        this.setState({
+          seconds: this.calculateSeconds(initialSeconds),
+          minutes: this.calculateMinutes(initialSeconds),
+          hours: this.calculateHours(initialSeconds)
+         })
+        }
+      }
+      else{
+
+        if(!this.props.pause && this.props.activeInBackground)
+          this.wentBackAt = Date.now();
+
+        console.log('App goes to background!');
+        
+      }
+      this.appState = nextAppState;
+    };
+
     componentDidMount(){
       this.setTimer(); 
-      if(this.props.animateSeperator && this.props.animateSeperator)
+      if(this.props.animateSeparator && this.props.showSeparator)
         this.startAnimate();
+
+      AppState.addEventListener('change', this._handleAppStateChange);
     }
 
    
 
     componentWillUnmount(){
       clearInterval(this.timer);
+      AppState.removeEventListener('change', this._handleAppStateChange);
     }
   
 
@@ -252,7 +298,7 @@ class CountDown extends Component {
       flexDirection
       
     } = this;
-    const {enableText, width, height, hoursText, minutesText, secondsText, showHours, showMinutes, showSeperator, animateSeperator} = this.props;
+    const {enableText, width, height, hoursText, minutesText, secondsText, showHours, showMinutes, showSeparator, animateSeparator, separatorStyle} = this.props;
 
     const opacity = this.animatedValue.interpolate({
       inputRange: [0, 0.5, 1],
@@ -268,7 +314,7 @@ class CountDown extends Component {
           {enableText && <Text style={propStyleForHoursText}>{hoursText}</Text>}
         </View>}
 
-       {showSeperator && <Animated.Text style={{textAlignVertical:'center', fontSize:30, opacity: animateSeperator? opacity : 1}}> : </Animated.Text>}
+       {showSeparator && <Animated.Text style={[{textAlignVertical:'center', fontSize:30, opacity: animateSeparator? opacity : 1},separatorStyle]}> : </Animated.Text>}
 
        {(minutes>0 || showMinutes) && <View style={[styles.minutesBackground, propStyleForMinutesBackground, {flexDirection}]}>
           <Text style={propStyleForMinutesDigit}>
@@ -277,7 +323,7 @@ class CountDown extends Component {
     {enableText &&  <Text style={propStyleForMinutesText}>{minutesText}</Text>}
         </View>} 
 
-        {showSeperator && <Animated.Text style={{textAlignVertical:'center', fontSize:30, opacity: animateSeperator? opacity : 1}}> : </Animated.Text>}
+        {showSeparator && <Animated.Text style={[{textAlignVertical:'center', fontSize:30, opacity: animateSeparator? opacity : 1}, separatorStyle]}> : </Animated.Text>}
 
         <View style={[styles.secondsBackground, propStyleForSecondsBackground, {flexDirection}]}>
           <Text style={propStyleForSecondsDigit}>
@@ -346,8 +392,11 @@ CountDown.propTypes = {
   showHours: propTypes.bool,
   showMinutes: propTypes.bool,
   onChange: propTypes.func,
-  showSeperator: propTypes.bool,
-  animateSeperator: propTypes.bool
+  showSeparator: propTypes.bool,
+  separatorStyle: propTypes.object,
+  animateSeparator: propTypes.bool,
+  pause: propTypes.bool,
+  activeInBackground: propTypes.bool
   
 };
 
@@ -368,8 +417,10 @@ CountDown.defaultProps = {
   secondsText: 'Seconds',
   showHours: true,
   showMinutes: true,
-  showSeperator: false,
-  animateSeperator: false
+  showSeparator: false,
+  animateSeparator: false,
+  pause: false,
+  activeInBackground: true
 };
 //make this component available to the app
 export default CountDown;

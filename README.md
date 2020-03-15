@@ -46,8 +46,11 @@ or from yarn:\
 | secondsText | text which should display in seconds container | no | string | 'Seconds' |
 | showHours | show or hide hours container if necessory (**can hide only if hours digit is zero**) | no | bool | true |
 | showMinutes | show or hide minutes container if necessory (**can hide only if minutes digit is zero**) | no | bool | true |
-| showSeperator | show or hide seperator between containers | no | bool | false |
-| animateSeperator | **only works when showSeperator is shown** | no | bool | false |
+| showSeparator | show or hide separator between containers | no | bool | false |
+| animateSeparator | **only works when showSeparator is true** | no | bool | false |
+| separatorStyle | style the separator | no | bool | false |
+| pause | pause the countdown | no | bool | false |
+| activeInBackground | countdown works even if the app is in background | no | bool | true |
 ## Usage
 
 ``` 
@@ -72,6 +75,18 @@ import {CountDown} from 'react-native-customizable-countdown'
     textColor='red'
     textFontWeight='bold'
     textPosition = 'top'/> 
+```
+
+```
+<CountDown
+        initialSeconds = {50}
+        onTimeOut = {()=>{}}        
+        showSeparator = {true}
+        animateSeparator = {true}   
+        separatorStyle={{color:'red', fontSize: 50}}
+        pause = {this.state.pause}
+        activeInBackground = {false}     
+        />
 ```
 
 ## onChange

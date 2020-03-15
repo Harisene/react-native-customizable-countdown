@@ -1,6 +1,6 @@
 {
   "name": "react-native-customizable-countdown",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "This module gives you the full access to change the UI as you want. More features will be available in the future!",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,8 @@
     "ui",
     "customize",
     "customizable",
-    "customizable-component"    
+    "customizable-component",
+    "react-native-customizable-countdown"
   ],
 
   "author": "Haritha Senevirathne",
