@@ -3,4 +3,4 @@ node_js:
   - node
 
 sudo: false
-after_success: npm run coverage
+# after_success: npm run coverage
