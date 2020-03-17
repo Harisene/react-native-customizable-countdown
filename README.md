@@ -1,3 +1,8 @@
+![npm](https://img.shields.io/npm/v/react-native-customizable-countdown)
+![NPM](https://img.shields.io/npm/l/react-native-customizable-countdown)
+![npm](https://img.shields.io/npm/dw/react-native-customizable-countdown)
+![GitHub issues](https://img.shields.io/github/issues/Harisene/react-native-customizable-countdown)
+
 ## Preview
 ![1](https://user-images.githubusercontent.com/33250282/76606296-02eecd80-6538-11ea-9a7c-2db54be6810d.PNG)
 
