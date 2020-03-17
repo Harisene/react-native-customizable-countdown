@@ -53,10 +53,10 @@
       "jsx",
       "json",
       "node"
-  ],
-  "transformIgnorePatterns": [
-    "node_modules/(?!(jest-)?react-native|@react-native-community|react)" 
-  ]
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|@react-native-community|react)"
+    ]
   },
   "homepage": "https://github.com/Harisene/react-native-customizable-countdown"
 }
