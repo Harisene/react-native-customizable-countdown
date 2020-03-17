@@ -16,6 +16,7 @@ or from yarn:\
 ## Props
 | Name  | Description | Required | Type | default |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
+| initialSeconds | seconds to start the countdown | no | number | 0 |
 | ref | use to handle **reset, addSeconds and deductSeconds** methods. (usage shown below) | no | func | none |
 | onTimeOut | triggers after finishing the countdown | **yes** | func | none |
 | onChange | get **seconds, minutes and hours** | no | func | none |
@@ -48,7 +49,7 @@ or from yarn:\
 | showMinutes | show or hide minutes container if necessory (**can hide only if minutes digit is zero**) | no | bool | true |
 | showSeparator | show or hide separator between containers | no | bool | false |
 | animateSeparator | **only works when showSeparator is true** | no | bool | false |
-| separatorStyle | style the separator | no | bool | false |
+| separatorStyle | style the separator | no | object | none |
 | pause | pause the countdown | no | bool | false |
 | activeInBackground | countdown works even if the app is in background | no | bool | true |
 ## Usage
