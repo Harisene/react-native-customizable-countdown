@@ -116,11 +116,11 @@ class CountDown extends Component {
   };
 
   calculateMinutes = initialSeconds => {
-    return Math.round(initialSeconds / 60) % 60;
+    return Math.floor(initialSeconds / 60) % 60;
   };
 
   calculateHours = initialSeconds => {
-    return Math.round(Math.round(initialSeconds / 60) / 60);
+    return Math.floor(Math.floor(initialSeconds / 60) / 60);
   };
 
   resetCountDown = () => {

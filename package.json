@@ -1,6 +1,6 @@
 {
   "name": "react-native-customizable-countdown",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "This module gives you the full access to change the UI as you want. More features will be available in the future!",
   "main": "index.js",
   "scripts": {
