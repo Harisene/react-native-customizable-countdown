@@ -18,7 +18,7 @@ from npm:\
 or from yarn:\
 ``` yarn add react-native-customizable-countdown ```
 
-## Props
+## Props  
 | Name  | Description | Required | Type | default |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | initialSeconds | seconds to start the countdown | no | number | 0 |
