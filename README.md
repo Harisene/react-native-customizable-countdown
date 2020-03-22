@@ -21,6 +21,10 @@ or from yarn:\
 ## What's new in 1.1.0
 ###### new Prop
 
+![animate1](https://user-images.githubusercontent.com/33250282/77244070-467fc080-6c37-11ea-9a2e-c0ad46cc53e7.gif)
+![animate2](https://user-images.githubusercontent.com/33250282/77244126-c3129f00-6c37-11ea-88a6-eadc49e7386d.gif)
+
+
 ``` endingAlert: {
         initiateAt: number (seconds),
         animate:bool, 
@@ -84,7 +88,7 @@ or from yarn:\
 | separatorStyle | style the separator | no | object | none |
 | pause | pause the countdown | no | bool | false |
 | activeInBackground | countdown works even if the app is in background | no | bool | true |
-| endingAlert | change UI colors when countdown hits a certian seconds (**initialAt is required**). Allows animation aswell. | no | obj | none |
+| endingAlert | change UI colors when countdown hits a certian seconds (**initiateAt is required**). Allows animation aswell. | no | obj | none |
 ## Usage
 
 ``` 
