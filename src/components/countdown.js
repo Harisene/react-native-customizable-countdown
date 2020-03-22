@@ -230,30 +230,30 @@ class CountDown extends Component {
   }
 
   animateBackgroundColor = (initialColor, animateColor) => {
-    if (this.props.endingAlert.animate) {
+    if (this.props.endingAlert.animate && animateColor) {
       return this.alertAnimateValue.interpolate({
         inputRange: [0, 1],
-        outputRange: [initialColor, animateColor? animateColor: 'red'],
+        outputRange: [initialColor, animateColor],
       });
-    } else return animateColor? animateColor: 'red';
+    } else return animateColor? animateColor: initialColor;
   };
 
   animateDigitColor = (initialColor, animateColor) => {
-    if (this.props.endingAlert.animate) {
+    if (this.props.endingAlert.animate && animateColor) {
       return this.alertAnimateValue.interpolate({
         inputRange: [0, 1],
-        outputRange: [initialColor, animateColor? animateColor: 'black'],
+        outputRange: [initialColor, animateColor],
       });
-    } else return animateColor? animateColor: 'black';
+    } else return animateColor? animateColor: initialColor;
   };
 
   animateTextColor = (initialColor, animateColor) => {
-    if (this.props.endingAlert.animate) {
+    if (this.props.endingAlert.animate && animateColor) {
       return this.alertAnimateValue.interpolate({
         inputRange: [0, 1],
-        outputRange: [initialColor, animateColor? animateColor: 'black'],
+        outputRange: [initialColor, animateColor],
       });
-    } else return animateColor? animateColor: 'black';
+    } else return animateColor? animateColor: initialColor;
   };
 
   _handleAppStateChange = nextAppState => {
