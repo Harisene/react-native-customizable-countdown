@@ -8,6 +8,7 @@ class CountDown extends Component {
     super(props);
 
     this.animatedValue = new Animated.Value(0);
+    this.alertAnimateValue = new Animated.Value(0);
 
     const {
       initialSeconds,
@@ -23,31 +24,32 @@ class CountDown extends Component {
       hoursDigitFontStyle,
       minutesDigitFontStyle,
       secondsDigitFontStyle,
-      textColor,
-      textFontSize,
-      textFontWeight,
-      hoursTextFontStyle,
-      minutesTextFontStyle,
-      secondsTextFontStyle,
-      textPosition,
+      labelColor,
+      labelFontSize,
+      labelFontWeight,
+      hoursLabelFontStyle,
+      minutesLabelFontStyle,
+      secondsLabelFontStyle,
+      labelPosition,
     } = this.props;
 
     this.propStyleForHoursBackground = {
       backgroundColor,
+      marginRight:gap/2,
       borderRadius,
       ...hoursBackgroundStyle,
     };
 
     this.propStyleForMinutesBackground = {
       backgroundColor,
-      marginLeft: gap,
+      marginHorizontal: gap/2,
       borderRadius,
       ...minutesBackgroundStyle,
     };
 
     this.propStyleForSecondsBackground = {
       backgroundColor,
-      marginLeft: gap,
+      marginHorizontal: gap/2,
       borderRadius,
       ...secondsBackgroundStyle,
     };
@@ -74,27 +76,27 @@ class CountDown extends Component {
     };
 
     this.propStyleForHoursText = {
-      color: textColor,
-      fontWeight: textFontWeight,
-      fontSize: textFontSize,
-      ...hoursTextFontStyle,
+      color: labelColor,
+      fontWeight: labelFontWeight,
+      fontSize: labelFontSize,
+      ...hoursLabelFontStyle,
     };
 
     this.propStyleForMinutesText = {
-      color: textColor,
-      fontWeight: textFontWeight,
-      fontSize: textFontSize,
-      ...minutesTextFontStyle,
+      color: labelColor,
+      fontWeight: labelFontWeight,
+      fontSize: labelFontSize,
+      ...minutesLabelFontStyle,
     };
 
     this.propStyleForSecondsText = {
-      color: textColor,
-      fontWeight: textFontWeight,
-      fontSize: textFontSize,
-      ...secondsTextFontStyle,
+      color: labelColor,
+      fontWeight: labelFontWeight,
+      fontSize: labelFontSize,
+      ...secondsLabelFontStyle,
     };
 
-    if (textPosition === 'top') {
+    if (labelPosition === 'top') {
       this.flexDirection = 'column-reverse';
     } else {
       this.flexDirection = 'column';
@@ -111,16 +113,16 @@ class CountDown extends Component {
     this.reset = false;
   }
 
-  calculateSeconds = initialSeconds => {
-    return initialSeconds % 60;
-  };
+  calculateSeconds = initialSeconds => initialSeconds % 60;
 
-  calculateMinutes = initialSeconds => {
-    return Math.floor(initialSeconds / 60) % 60;
-  };
+  calculateMinutes = initialSeconds => Math.floor(initialSeconds / 60) % 60;
 
-  calculateHours = initialSeconds => {
-    return Math.floor(Math.floor(initialSeconds / 60) / 60);
+  calculateHours = initialSeconds =>
+    Math.floor(Math.floor(initialSeconds / 60) / 60);
+
+  calculateTotalSeconds = () => {
+    const {seconds, minutes, hours} = this.state;
+    return seconds + minutes * 60 + hours * 3600;
   };
 
   resetCountDown = () => {
@@ -188,12 +190,13 @@ class CountDown extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.seconds !== prevState.seconds) {
-      if (this.props.onChange)
+      if (this.props.onChange) {
         this.props.onChange(
           this.state.hours,
           this.state.minutes,
           this.state.seconds,
         );
+      }
     }
 
     if (this.props.pause !== prevProps.pause) {
@@ -216,6 +219,42 @@ class CountDown extends Component {
         this.startAnimate();
     });
   }
+
+  alertAnimate() {
+    this.alertAnimateValue.setValue(0);
+    Animated.timing(this.alertAnimateValue, {
+      toValue: 1,
+      duration: 1000,
+      easing: Easing.linear,
+    }).start();
+  }
+
+  animateBackgroundColor = (initialColor, animateColor) => {
+    if (this.props.endingAlert.animate) {
+      return this.alertAnimateValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: [initialColor, animateColor? animateColor: 'red'],
+      });
+    } else return animateColor? animateColor: 'red';
+  };
+
+  animateDigitColor = (initialColor, animateColor) => {
+    if (this.props.endingAlert.animate) {
+      return this.alertAnimateValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: [initialColor, animateColor? animateColor: 'black'],
+      });
+    } else return animateColor? animateColor: 'black';
+  };
+
+  animateTextColor = (initialColor, animateColor) => {
+    if (this.props.endingAlert.animate) {
+      return this.alertAnimateValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: [initialColor, animateColor? animateColor: 'black'],
+      });
+    } else return animateColor? animateColor: 'black';
+  };
 
   _handleAppStateChange = nextAppState => {
     if (
@@ -253,6 +292,9 @@ class CountDown extends Component {
     if (this.props.animateSeparator && this.props.showSeparator)
       this.startAnimate();
 
+    // if (this.props.endingAlert?.animate)
+    //   this.alertAnimate();
+
     AppState.addEventListener('change', this._handleAppStateChange);
   }
 
@@ -276,17 +318,19 @@ class CountDown extends Component {
       flexDirection,
     } = this;
     const {
-      enableText,
+      enableLabel,
       width,
       height,
-      hoursText,
-      minutesText,
-      secondsText,
+      hoursLabel,
+      minutesLabel,
+      secondsLabel,
       showHours,
       showMinutes,
       showSeparator,
       animateSeparator,
       separatorStyle,
+      endingAlert,
+      pause
     } = this.props;
 
     const opacity = this.animatedValue.interpolate({
@@ -294,85 +338,194 @@ class CountDown extends Component {
       outputRange: [0, 1, 1],
     });
 
-    return (
-      <View style={[styles.container, {width, height}]}>
-        {(hours > 0 || showHours) && (
-          <View
-            style={[
-              styles.hoursBackground,
-              propStyleForHoursBackground,
-              {flexDirection},
-            ]}>
-            <Text style={[propStyleForHoursDigit]}>
-              {hours < 10 ? '0' + hours : hours}
-            </Text>
-            {enableText && (
-              <Text style={propStyleForHoursText}>{hoursText}</Text>
-            )}
-          </View>
-        )}
+    if (endingAlert?.initiateAt >= this.calculateTotalSeconds()) {
+      if(!pause)
+        this.alertAnimate();
+      const {
+        backgroundColor,
+        digitColor,
+        labelColor        
+      } = endingAlert;               
 
-        {showSeparator && (
-          <Animated.Text
-            style={[
-              {
-                textAlignVertical: 'center',
-                fontSize: 30,
-                opacity: animateSeparator ? opacity : 1,
-              },
-              separatorStyle,
-            ]}>
-            {' '}
-            :{' '}
-          </Animated.Text>
-        )}
+      //console.log(animateBackgroundColor);
 
-        {(minutes > 0 || showMinutes) && (
-          <View
-            style={[
-              styles.minutesBackground,
-              propStyleForMinutesBackground,
-              {flexDirection},
-            ]}>
-            <Text style={propStyleForMinutesDigit}>
-              {minutes < 10 ? '0' + minutes : minutes}
-            </Text>
-            {enableText && (
-              <Text style={propStyleForMinutesText}>{minutesText}</Text>
-            )}
-          </View>
-        )}
-
-        {showSeparator && (
-          <Animated.Text
-            style={[
-              {
-                textAlignVertical: 'center',
-                fontSize: 30,
-                opacity: animateSeparator ? opacity : 1,
-              },
-              separatorStyle,
-            ]}>
-            {' '}
-            :{' '}
-          </Animated.Text>
-        )}
-
-        <View
-          style={[
-            styles.secondsBackground,
-            propStyleForSecondsBackground,
-            {flexDirection},
-          ]}>
-          <Text style={propStyleForSecondsDigit}>
-            {seconds < 10 ? '0' + seconds : seconds}
-          </Text>
-          {enableText && (
-            <Text style={propStyleForSecondsText}>{secondsText}</Text>
+      return (
+        <View style={[styles.container, {width, height}]}>
+          {(hours > 0 || showHours) && (
+            <Animated.View
+              style={[
+                styles.hoursBackground,
+                propStyleForHoursBackground,
+                {
+                  flexDirection,
+                  backgroundColor: this.animateBackgroundColor(
+                    this.propStyleForHoursBackground.backgroundColor,
+                    backgroundColor,
+                  ),
+                },
+              ]}>
+              <Animated.Text style={[propStyleForHoursDigit, {color: this.animateDigitColor(propStyleForHoursDigit.color, digitColor)}]}>
+                {hours < 10 ? '0' + hours : hours}
+              </Animated.Text>
+              {enableLabel && (
+                <Animated.Text style={[propStyleForHoursText, {color: this.animateTextColor(propStyleForHoursText.color, labelColor)}]}>
+                  {hoursLabel}
+                </Animated.Text>
+              )}
+            </Animated.View>
           )}
+
+          {showSeparator && (hours > 0 || showHours) && (
+            <Animated.Text
+              style={[
+                {
+                  textAlignVertical: 'center',
+                  fontSize: 30,
+                  opacity: animateSeparator ? opacity : 1,
+                },
+                separatorStyle,
+              ]}>
+              {' '}
+              :{' '}
+            </Animated.Text>
+          )}
+
+          {(minutes > 0 || showMinutes) && (
+            <Animated.View
+              style={[
+                styles.minutesBackground,
+                propStyleForMinutesBackground,
+                {flexDirection, backgroundColor: this.animateBackgroundColor(
+                  this.propStyleForMinutesBackground.backgroundColor,
+                  backgroundColor,
+                ),},
+              ]}>
+              <Animated.Text style={[propStyleForMinutesDigit, {color: this.animateDigitColor(this.propStyleForMinutesDigit.color, digitColor)}]}>
+                {minutes < 10 ? '0' + minutes : minutes}
+              </Animated.Text>
+              {enableLabel && (
+                <Animated.Text style={[propStyleForMinutesText, {color: this.animateTextColor(propStyleForMinutesText.color, labelColor)}]}>
+                  {minutesLabel}
+                </Animated.Text>
+              )}
+            </Animated.View>
+          )}
+
+          {showSeparator && (minutes > 0 || showMinutes) && (
+            <Animated.Text
+              style={[
+                {
+                  textAlignVertical: 'center',
+                  fontSize: 30,
+                  opacity: animateSeparator ? opacity : 1,
+                },
+                separatorStyle,
+              ]}>
+              {' '}
+              :{' '}
+            </Animated.Text>
+          )}
+
+          <Animated.View
+            style={[
+              styles.secondsBackground,
+              propStyleForSecondsBackground,
+              {flexDirection, backgroundColor: this.animateBackgroundColor(
+                this.propStyleForSecondsBackground.backgroundColor,
+                backgroundColor,
+              )},
+            ]}>
+            <Animated.Text style={[propStyleForSecondsDigit, {color: this.animateDigitColor(this.propStyleForSecondsDigit.color, digitColor)}]}>
+              {seconds < 10 ? '0' + seconds : seconds}
+            </Animated.Text>
+            {enableLabel && (
+              <Animated.Text style={[propStyleForSecondsText, {color: this.animateTextColor(propStyleForSecondsText.color, labelColor)}]}>
+                {secondsLabel}
+              </Animated.Text>
+            )}
+          </Animated.View>
         </View>
-      </View>
-    );
+      );
+    } else
+      return (
+        <View style={[styles.container, {width, height}]}>
+          {(hours > 0 || showHours) && (
+            <View
+              style={[
+                styles.hoursBackground,
+                propStyleForHoursBackground,
+                {flexDirection},
+              ]}>
+              <Text style={[propStyleForHoursDigit]}>
+                {hours < 10 ? '0' + hours : hours}
+              </Text>
+              {enableLabel && (
+                <Text style={propStyleForHoursText}>{hoursLabel}</Text>
+              )}
+            </View>
+          )}
+
+          {showSeparator && (hours > 0 || showHours) && (
+            <Animated.Text
+              style={[
+                {
+                  textAlignVertical: 'center',
+                  fontSize: 30,
+                  opacity: animateSeparator ? opacity : 1,
+                },
+                separatorStyle,
+              ]}>
+              {' '}
+              :{' '}
+            </Animated.Text>
+          )}
+
+          {(minutes > 0 || showMinutes) && (
+            <View
+              style={[
+                styles.minutesBackground,
+                propStyleForMinutesBackground,
+                {flexDirection},
+              ]}>
+              <Text style={propStyleForMinutesDigit}>
+                {minutes < 10 ? '0' + minutes : minutes}
+              </Text>
+              {enableLabel && (
+                <Text style={propStyleForMinutesText}>{minutesLabel}</Text>
+              )}
+            </View>
+          )}
+
+          {showSeparator && (minutes > 0 || showMinutes) && (
+            <Animated.Text
+              style={[
+                {
+                  textAlignVertical: 'center',
+                  fontSize: 30,
+                  opacity: animateSeparator ? opacity : 1,
+                },
+                separatorStyle,
+              ]}>
+              {' '}
+              :{' '}
+            </Animated.Text>
+          )}
+
+          <View
+            style={[
+              styles.secondsBackground,
+              propStyleForSecondsBackground,
+              {flexDirection},
+            ]}>
+            <Text style={propStyleForSecondsDigit}>
+              {seconds < 10 ? '0' + seconds : seconds}
+            </Text>
+            {enableLabel && (
+              <Text style={propStyleForSecondsText}>{secondsLabel}</Text>
+            )}
+          </View>
+        </View>
+      );
   }
 }
 
@@ -418,17 +571,17 @@ CountDown.propTypes = {
   minutesDigitFontStyle: propTypes.object,
   secondsDigitFontStyle: propTypes.object,
   digitFontWeight: propTypes.string,
-  textColor: propTypes.string,
-  textFontSize: propTypes.oneOfType([propTypes.string, propTypes.number]),
-  textFontWeight: propTypes.string,
-  hoursTextFontStyle: propTypes.object,
-  minutesTextFontStyle: propTypes.object,
-  secondsTextFontStyle: propTypes.object,
-  textPosition: propTypes.oneOf(['top', 'bottom']),
-  enableText: propTypes.bool,
-  hoursText: propTypes.string,
-  minutesText: propTypes.string,
-  secondsText: propTypes.string,
+  labelColor: propTypes.string,
+  labelFontSize: propTypes.oneOfType([propTypes.string, propTypes.number]),
+  labelFontWeight: propTypes.string,
+  hoursLabelFontStyle: propTypes.object,
+  minutesLabelFontStyle: propTypes.object,
+  secondsLabelFontStyle: propTypes.object,
+  labelPosition: propTypes.oneOf(['top', 'bottom']),
+  enableLabel: propTypes.bool,
+  hoursLabel: propTypes.string,
+  minutesLabel: propTypes.string,
+  secondsLabel: propTypes.string,
   showHours: propTypes.bool,
   showMinutes: propTypes.bool,
   onChange: propTypes.func,
@@ -437,6 +590,13 @@ CountDown.propTypes = {
   animateSeparator: propTypes.bool,
   pause: propTypes.bool,
   activeInBackground: propTypes.bool,
+  endingAlert: propTypes.shape({
+    animate: propTypes.bool,
+    digitColor: propTypes.string,
+    labelColor: propTypes.string,
+    backgroundColor: propTypes.string,
+    initiateAt: propTypes.number.isRequired,
+  }),
 };
 
 CountDown.defaultProps = {
@@ -448,18 +608,18 @@ CountDown.defaultProps = {
   height: 80,
   borderRadius: 5,
   digitFontSize: 18,
-  textColor: 'black',
-  textFontSize: 10,
-  textPosition: 'bottom',
-  hoursText: 'Hours',
-  minutesText: 'Minutes',
-  secondsText: 'Seconds',
+  labelColor: 'black',
+  labelFontSize: 10,
+  labelPosition: 'bottom',
+  hoursLabel: 'Hours',
+  minutesLabel: 'Minutes',
+  secondsLabel: 'Seconds',
   showHours: true,
   showMinutes: true,
   showSeparator: false,
   animateSeparator: false,
   pause: false,
-  activeInBackground: true,
+  activeInBackground: true  
 };
 //make this component available to the app
 export default CountDown;

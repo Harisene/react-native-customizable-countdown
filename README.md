@@ -18,6 +18,33 @@ from npm:\
 or from yarn:\
 ``` yarn add react-native-customizable-countdown ```
 
+## What's new in 1.1.0
+###### new Prop
+
+``` endingAlert: {
+        initiateAt: number (seconds),
+        animate:bool, 
+        backgroundColor: string,
+        digitColor: string,
+        labelColor: string
+        }
+```
+
+###### changed Prop names
+| Previous Prop Name  | New Prop Name | 
+| ------------- | ------------- |
+| textColor | labelColor |
+| textFontWeight | labelFontSize |
+| textFontWeight | labelFontWeight |
+| hoursTextFontStyle | hoursLabelFontStyle |
+| minutesTextFontStyle | minutesLabelFontStyle |
+| secondsTextFontStyle | secondsLabelFontStyle |
+| textPosition | labelPosition |
+| enableText | enableLabel |
+| hoursText | hoursLabel |
+| minutesText | minutesLabel |
+| secondsText | secondsLabel |
+
 ## Props  
 | Name  | Description | Required | Type | default |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
@@ -57,6 +84,7 @@ or from yarn:\
 | separatorStyle | style the separator | no | object | none |
 | pause | pause the countdown | no | bool | false |
 | activeInBackground | countdown works even if the app is in background | no | bool | true |
+| endingAlert | change UI colors when countdown hits a certian seconds (**initialAt is required**). Allows animation aswell. | no | obj | none |
 ## Usage
 
 ``` 
@@ -91,7 +119,14 @@ import {CountDown} from 'react-native-customizable-countdown'
         animateSeparator = {true}   
         separatorStyle={{color:'red', fontSize: 50}}
         pause = {this.state.pause}
-        activeInBackground = {false}     
+        activeInBackground = {false}
+        endingAlert={{
+          backgroundColor:'red',
+          initiateAt:120, 
+          animate:true, 
+          digitColor:'blue',
+          labelColor:'yellow'
+        }}     
         />
 ```
 
@@ -121,7 +156,7 @@ using **ref** property you can access below mentioned all methods.
 ``` this.myRef.resetCountDown() ```
 
 ###### addSeconds 
-``` this.myRef.resetCountDown(number) ```
+``` this.myRef.addSeconds(number) ```
 
 ###### deductSeconds 
 ``` this.myRef.deductSeconds(number) ```
