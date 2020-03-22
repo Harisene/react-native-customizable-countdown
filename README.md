@@ -18,7 +18,7 @@ from npm:\
 or from yarn:\
 ``` yarn add react-native-customizable-countdown ```
 
-## What's new in 1.1.0
+## What's new in 1.1.2
 ###### new Prop
 
 ![animate1](https://user-images.githubusercontent.com/33250282/77244070-467fc080-6c37-11ea-9a2e-c0ad46cc53e7.gif)
@@ -99,20 +99,20 @@ import {CountDown} from 'react-native-customizable-countdown'
     initialSeconds = {4500}
     onTimeOut = {()=>{}}
     digitFontSize={30}
-    textFontSize = {15}
+    labelFontSize = {15}
     width={300}
     height={100}
-    hoursText={'hrs'}
-    minutesText={'min'}
-    enableText = {true}
+    hoursLabel={'hrs'}
+    minutesLabel={'min'}
+    enableLabel = {true}
     backgroundColor={'yellow'}
     hoursBackgroundStyle={{borderWidth:2, backgroundColor:null, borderColor: 'blue'}}
     secondsBackgroundStyle={{borderWidth:0, backgroundColor:null, borderColor: 'blue'}}
     secondsDigitFontStyle={{color:'pink'}}
-    secondsTextFontStyle={{color:'green'}}
-    textColor='red'
-    textFontWeight='bold'
-    textPosition = 'top'/> 
+    secondsLabelFontStyle={{color:'green'}}
+    labelColor='red'
+    labelFontWeight='bold'
+    labelPosition = 'top'/> 
 ```
 
 ```
@@ -149,7 +149,7 @@ onChange = (hours, minutes, seconds) => {
         onTimeOut = {()=>{alert('time out!')}}
         onChange = {this.onChange}
         digitFontSize={30}
-        textFontSize = {15}
+        labelFontSize = {15}
         width={300}
         height={100}/>
 ```
