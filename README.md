@@ -70,17 +70,17 @@ or from yarn:\
 | hoursDigitFontStyle | styling hours digits  | no | object | none |
 | minutesDigitFontStyle | styling minutes digits | no | object | none |
 | secondsDigitFontStyle | styling seconds digits | no | object | none |
-| textColor | change all texts' color | no | string | 'black' |
-| textFontSize | change all texts' font sizes | no | number or string | 10 |
-| textFontWeight | change all texts' font weight | no | string | none |
-| hoursTextFontStyle | styling hours text  | no | object | none |
-| minutesTextFontStyle | styling minutes text | no | object | none |
-| secondsTextFontStyle | styling seconds text | no | object | none |
-| enableText | hide or show text with digits | no | bool | none |
-| textPostion | position of the texts in each container. **'top' or 'bottom'** | no | string | 'bottom' |
-| hoursText | text which should display in hours container | no | string | 'Hours' |
-| minutesText | text which should display in minutes container | no | string | 'Minutes' |
-| secondsText | text which should display in seconds container | no | string | 'Seconds' |
+| labelColor | change all texts' color | no | string | 'black' |
+| labelFontSize | change all texts' font sizes | no | number or string | 10 |
+| labelFontWeight | change all texts' font weight | no | string | none |
+| hoursLabelFontStyle | styling hours text  | no | object | none |
+| minutesLabelFontStyle | styling minutes text | no | object | none |
+| secondsLabelFontStyle | styling seconds text | no | object | none |
+| enableLabel | hide or show text with digits | no | bool | none |
+| labelPostion | position of the texts in each container. **'top' or 'bottom'** | no | string | 'bottom' |
+| hoursLabel | text which should display in hours container | no | string | 'Hours' |
+| minutesLabel | text which should display in minutes container | no | string | 'Minutes' |
+| secondsLabel | text which should display in seconds container | no | string | 'Seconds' |
 | showHours | show or hide hours container if necessory (**can hide only if hours digit is zero**) | no | bool | true |
 | showMinutes | show or hide minutes container if necessory (**can hide only if minutes digit is zero**) | no | bool | true |
 | showSeparator | show or hide separator between containers | no | bool | false |
