@@ -25,7 +25,8 @@ or from yarn:\
 ![animate2](https://user-images.githubusercontent.com/33250282/77244126-c3129f00-6c37-11ea-88a6-eadc49e7386d.gif)
 
 
-``` endingAlert: {
+``` 
+endingAlert: {
         initiateAt: number (seconds),
         animate:bool, 
         backgroundColor: string,
