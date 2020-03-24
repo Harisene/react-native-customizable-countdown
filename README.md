@@ -18,7 +18,7 @@ from npm:\
 or from yarn:\
 ``` yarn add react-native-customizable-countdown ```
 
-## What's new in 1.1.2
+## What's new in v1.1.3
 ###### new Prop
 
 ![animate1](https://user-images.githubusercontent.com/33250282/77244070-467fc080-6c37-11ea-9a2e-c0ad46cc53e7.gif)
