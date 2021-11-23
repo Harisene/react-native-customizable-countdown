@@ -213,6 +213,7 @@ class CountDown extends Component {
       toValue: 1,
       duration: 1000,
       easing: Easing.linear,
+      useNativeDriver: true,
     }).start(() => {
       const {seconds, minutes, hours} = this.state;
       if ((seconds || minutes || hours) && !this.props.pause)
@@ -226,6 +227,7 @@ class CountDown extends Component {
       toValue: 1,
       duration: 1000,
       easing: Easing.linear,
+      useNativeDriver: true,
     }).start();
   }
 
