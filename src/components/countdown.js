@@ -297,12 +297,12 @@ class CountDown extends Component {
     // if (this.props.endingAlert?.animate)
     //   this.alertAnimate();
 
-    AppState.addEventListener('change', this._handleAppStateChange);
+    this.subcription = AppState.addEventListener('change', this._handleAppStateChange);
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
-    AppState.removeEventListener('change', this._handleAppStateChange);
+    this.subcription.remove();
   }
 
   render() {
