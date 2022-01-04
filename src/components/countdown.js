@@ -212,6 +212,7 @@ class CountDown extends Component {
     Animated.timing(this.animatedValue, {
       toValue: 1,
       duration: 1000,
+      useNativeDriver: true,
       easing: Easing.linear,
     }).start(() => {
       const {seconds, minutes, hours} = this.state;
